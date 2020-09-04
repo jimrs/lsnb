@@ -13,7 +13,7 @@ The code here is based on scikit-learn code of MultinomialNB. It inherits from B
 * todo
 
 ## Jupyter notebooks
-* experiment for showing precision and accuracy compared to MNB, BNG, GNB
+* [experiment for showing precision and accuracy compared to MNB, BNG, GNB](notebooks/metrics_evaluation)
 * experiment for other datasets (iris)
 * experiment for data intrusion
 

@@ -35,7 +35,7 @@ class LooselySymmetricNB(_BaseDiscreteNB):
         self._calculate_df()
         self._calculate_abcd(self.smoothed_fc, self.smoothed_cc.reshape(-1, 1), self.enhance)
         
-        # HAM
+        # CLASS 0
         self.bd = (self.b * self.d) / (self.b + self.d)
         self.ac = (self.a * self.c) / (self.a + self.c)
         bd = (self.b * self.d) / (self.b + self.d)
@@ -43,11 +43,11 @@ class LooselySymmetricNB(_BaseDiscreteNB):
         numerator = self.a + bd
         denumerator = self.a + self.b + ac + bd
         
-        # index 0 is for ham, index 1 is for spam
+        # index 0 is for class 0, index 1 is for class 1
         self.feature_log_prob_ = np.empty(self.feature_count_.shape) 
         self.feature_log_prob_[0] = np.log(numerator) - np.log(denumerator)
         
-        # SPAM
+        # CLASS 1
         numerator = self.c + bd
         denumerator = self.c + self.d + ac + bd
         
@@ -56,26 +56,26 @@ class LooselySymmetricNB(_BaseDiscreteNB):
     def _calculate_df(self):
         
         self.df = np.zeros(self.feature_count_.shape, dtype=np.int32)
-        for mail_idx, mail in enumerate(self.X.toarray()):
-            for word_idx, word in enumerate(mail):
+        for sample_idx, sample in enumerate(self.X.toarray()):
+            for word_idx, word in enumerate(sample):
                 if word >= 1:
-                    self.df[self.y[mail_idx]][word_idx] += 1
+                    self.df[self.y[sample_idx]][word_idx] += 1
 
     def _calculate_abcd(self, fc, cc, enhance):
         
-        # at 0 is ham info, at 1 is spam info
+        # at 0 is class 1 info, at 1 is class 1 info
         if enhance:
-            word_density_ham = fc[0] / cc[0]
-            word_density_spam = fc[1] / cc[1]
+            word_density_class0 = fc[0] / cc[0]
+            word_density_class1 = fc[1] / cc[1]
         
         else:
-            word_density_ham = 1
-            word_density_spam = 1
+            word_density_class0 = 1
+            word_density_class1 = 1
         
-        self.a = (self.df[0] / self.class_count_[0]) * word_density_ham
-        self.b = (1 - self.a) * word_density_spam
-        self.c = (self.df[1] / self.class_count_[1]) * word_density_spam
-        self.d = (1 - self.c) * word_density_ham
+        self.a = (self.df[0] / self.class_count_[0]) * word_density_class0
+        self.b = (1 - self.a) * word_density_class1
+        self.c = (self.df[1] / self.class_count_[1]) * word_density_class1
+        self.d = (1 - self.c) * word_density_class0
     
     def _joint_log_likelihood(self, X):
        
