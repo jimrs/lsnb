@@ -37,13 +37,6 @@ def read_enron(dir, n_emails=None):
 
     return mails, mails_labels
 
-# only IRIS so far
-def read_csv(path):
-    df = pd.read_csv(path)
-    data = df[df.columns[0:4]]
-    labels = df['species']
-    return data.values, labels.values
-
 _porter_stemmer = nltk.stem.porter.PorterStemmer()
 
 # Sebastian Raschka
@@ -103,4 +96,13 @@ def vectorize(data):
 # getter
 @property
 def vectorizer():
+    with open("./stop_words.txt", "r") as f:
+        _stop_words = f.read().splitlines()
+
+    # get rid of inconsistent tokenize warning
+    stop_words = []
+    for word in _stop_words:
+        stop_words.append(_tokenize(word)[0])
+    stop_words = list(dict.fromkeys(stop_words))  # remove duplicates
+    
     return _vectorizer

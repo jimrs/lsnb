@@ -1,8 +1,8 @@
 import numpy as np
-from BaseDiscreteNB import _BaseDiscreteNB
+from lsnb.lsnb.BaseDiscreteNB import _BaseDiscreteNB
 from sklearn.utils.validation import check_non_negative
 from sklearn.utils.extmath import safe_sparse_dot
-import utils.preprocessing
+import lsnb.lsnb.utils.preprocessing
 
 class LooselySymmetricNB(_BaseDiscreteNB):
     
@@ -83,19 +83,13 @@ class LooselySymmetricNB(_BaseDiscreteNB):
                 self.class_log_prior_)
 
     def read_enron(self, dir, n_emails, test_ratio=0):
-        mails, mails_labels = utils.preprocessing.read_enron(dir, n_emails)
+        mails, mails_labels = lsnb.lsnb.utils.preprocessing.read_enron(dir, n_emails)
 
         # check input
         if test_ratio is not 0:
-            self.X_internal_train, self.X_internal_test, self.Y_internal_train, self.Y_internal_test = utils.preprocessing.preprocess(mails, mails_labels, test_ratio)
+            self.X_internal_train, self.X_internal_test, self.Y_internal_train, self.Y_internal_test = lsnb.lsnb.utils.preprocessing.preprocess(mails, mails_labels, test_ratio)
         else:
-            self.X_internal_train, _, self.Y_internal_train, _ = utils.preprocessing.preprocess(mails, mails_labels, test_ratio)
-
-
-    def read_csv(self, path):
-        data, labels = utils.preprocessing.read_csv(path)
-        print(data)
-        print(labels)
+            self.X_internal_train, _, self.Y_internal_train, _ = lsnb.lsnb.utils.preprocessing.preprocess(mails, mails_labels, test_ratio)
 
     def fit_internal(self):
         self.fit(self.X_internal_train, self.Y_internal_train)

@@ -5,13 +5,8 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 
-# iris_path = "datasets/iris.csv"
-# lsnb = LooselySymmetricNB()
-
-# lsnb.read_csv(path=iris_path)
-
 lsnb = LooselySymmetricNB()
-data, labels = load_iris(return_X_y=True)
+data, labels = load_breast_cancer(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.25, shuffle=True)
 
 clf = OneVsRestClassifier(lsnb).fit(X_train, y_train)
